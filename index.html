@@ -114,6 +114,7 @@
     border-radius:16px 16px 16px 60px;
     padding:26px 26px 26px 40px;
     border:2px solid rgba(244,196,48,.35);
+    margin:0 auto;
   }
   .price-tag::before{
     content:"";
@@ -251,7 +252,7 @@ function defaultQuestions(){
     "Une montre connectée","Un canapé 3 places","Une tondeuse à gazon électrique",
     "Un appareil photo reflex","Une console de jeux vidéo","Un robot pâtissier"
   ];
-  return titles.map(t => ({title:t, price:'', image:''}));
+  return titles.map(t => ({title:t, price:'', image:'', description:''}));
 }
 function defaultHostState(){
   return { phase:'setup', questions: defaultQuestions(), currentIndex:-1, results:{} };
@@ -384,7 +385,8 @@ async function loadQuestionsConfig(){
     return data.map(q => ({
       title: (q.nom ?? q.title ?? '').toString(),
       price: (q.valeur ?? q.prix ?? q.price ?? '').toString(),
-      image: (q.image ?? '').toString()
+      image: (q.image ?? '').toString(),
+      description: (q.description ?? '').toString()
     }));
   }catch(e){ return null; }
 }
@@ -408,7 +410,7 @@ async function hostValidateSetup(){
   startHostLobbyPolling();
 }
 function hostAddQuestion(){
-  hostState.questions.push({ title:'', price:'', image:'' });
+  hostState.questions.push({ title:'', price:'', image:'', description:'' });
   render();
 }
 function hostRemoveQuestion(i){
@@ -580,6 +582,12 @@ function renderHostSetup(){
           <input type="url" data-idx="${i}" data-field="image" value="${q.image.replace(/"/g,'&quot;')}" placeholder="https://...">
         </div>
       </div>
+      <div class="row" style="margin-top:8px;">
+        <div style="flex:1;">
+          <label>Description (optionnel)</label>
+          <input type="text" data-idx="${i}" data-field="description" value="${(q.description||'').replace(/"/g,'&quot;')}" placeholder="Détails à afficher sous le titre...">
+        </div>
+      </div>
     </div>
   `).join('');
   app.innerHTML = `
@@ -642,13 +650,13 @@ function renderHostQuestion(){
       <div class="eyebrow">Question ${hostState.currentIndex+1} / ${hostState.questions.length}</div>
       <div class="price-tag" style="max-width:600px;">
         <div class="obj-title">${q.title}</div>
+        ${q.description ? `<p class="muted" style="margin-top:8px;">${q.description}</p>` : ''}
         ${q.image ? `<img src="${q.image}" alt="${q.title}">` : ''}
-        <div class="muted small">Les joueurs proposent un prix depuis leur téléphone…</div>
       </div>
       <div class="row" style="justify-content:center;">
         <button class="btn secondary" id="check-btn">🔄 Combien ont répondu ?</button>
       </div>
-      ${answeredCount !== null ? `<p class="muted">Réponses reçues : <span class="num" style="color:var(--gold);font-weight:700;">${answeredCount}</span> / ${Object.keys(playersMap).length} <br><span class="small">La révélation se lance automatiquement dès que tout le monde a répondu.</span></p>` : ''}
+      ${answeredCount !== null ? `<p class="muted">Réponses reçues : <span class="num" style="color:var(--gold);font-weight:700;">${answeredCount}</span> / ${Object.keys(playersMap).length}</p>` : ''}
       <button class="btn pink big" id="reveal-btn">🎉 Révéler maintenant</button>
     </div>
   `;
@@ -799,6 +807,7 @@ function renderPlayerQuestion(){
         <div class="eyebrow">Question ${idx+1} / ${hostState.questions.length}</div>
         <div class="price-tag">
           <div class="obj-title">${q.title}</div>
+          ${q.description ? `<p class="muted" style="margin-top:8px;">${q.description}</p>` : ''}
           ${q.image ? `<img src="${q.image}" alt="${q.title}">` : ''}
         </div>
         <h2>✅ Réponse envoyée : ${euro(already)}</h2>
@@ -811,6 +820,7 @@ function renderPlayerQuestion(){
       <div class="eyebrow">Question ${idx+1} / ${hostState.questions.length}</div>
       <div class="price-tag">
         <div class="obj-title">${q.title}</div>
+        ${q.description ? `<p class="muted" style="margin-top:8px;">${q.description}</p>` : ''}
         ${q.image ? `<img src="${q.image}" alt="${q.title}">` : ''}
       </div>
       <label>Ton estimation (€)</label>
