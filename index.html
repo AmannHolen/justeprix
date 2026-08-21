@@ -659,20 +659,40 @@ function renderHostReveal(){
       <div class="pts">+${e.points} pt${e.points>1?'s':''}</div>
     </div>
   `).join('') || `<p class="muted">Aucune réponse reçue pour cette question.</p>`;
+
+  const totals = overallTotals();
+  const lbRows = totals.map((p,i) => `
+    <div class="lb-row ${i===0?'top1':''}">
+      <div class="rank num">${i+1}</div>
+      <div class="name">${p.name}</div>
+      <div class="score num">${p.score} pt${p.score>1?'s':''}</div>
+    </div>
+  `).join('') || `<p class="muted">Pas encore de joueurs classés.</p>`;
+
+  const isLast = hostState.currentIndex >= hostState.questions.length - 1;
+
   app.innerHTML = `
     <div class="stack center">
-      <div class="eyebrow">Le juste prix était…</div>
-      <div class="price-tag" style="max-width:600px;">
-        <div class="obj-title">${q.title}</div>
-        <div class="price-reveal num">${euro(parseFloat(q.price))}</div>
+      <div class="eyebrow">Question ${hostState.currentIndex+1} / ${hostState.questions.length}</div>
+      <div class="row" style="justify-content:center;align-items:flex-start;gap:24px;flex-wrap:wrap;width:100%;">
+        <div style="flex:1;min-width:320px;max-width:560px;">
+          <div class="price-tag">
+            <div class="obj-title">${q.title}</div>
+            <div class="price-reveal num">${euro(parseFloat(q.price))}</div>
+          </div>
+          <div class="card answer-grid" style="margin-top:14px;text-align:left;">
+            ${rowsHtml}
+          </div>
+        </div>
+        <div class="card" style="flex:1;min-width:260px;max-width:380px;text-align:left;">
+          <h3 style="margin-bottom:10px;">📊 Classement général</h3>
+          <div class="stack">${lbRows}</div>
+        </div>
       </div>
-      <div class="card answer-grid" style="width:100%;max-width:600px;text-align:left;">
-        ${rowsHtml}
-      </div>
-      <button class="btn big" id="lb-btn">📊 Voir le classement général</button>
+      <button class="btn big" id="next-btn">${isLast ? '🏆 Voir le podium final' : 'Question suivante →'}</button>
     </div>
   `;
-  document.getElementById('lb-btn').onclick = hostGoLeaderboard;
+  document.getElementById('next-btn').onclick = hostNextOrPodium;
 }
 
 function renderHostLeaderboard(){
