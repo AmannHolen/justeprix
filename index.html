@@ -316,12 +316,21 @@ async function hostCreateSession(){
   render();
 }
 async function hostValidateSetup(){
+  if(hostState.questions.length === 0){ errorMsg = "Ajoute au moins une question avant de continuer."; render(); return; }
   const bad = hostState.questions.some(q => !q.title.trim() || isNaN(parseFloat(q.price)) || parseFloat(q.price) <= 0);
   if(bad){ errorMsg = "Merci de remplir un titre et un prix (> 0) pour chaque question."; render(); return; }
   errorMsg='';
   hostState.phase = 'lobby';
   await saveHostState();
   startHostLobbyPolling();
+}
+function hostAddQuestion(){
+  hostState.questions.push({ title:'', price:'', image:'' });
+  render();
+}
+function hostRemoveQuestion(i){
+  hostState.questions.splice(i, 1);
+  render();
 }
 async function refreshRoster(){
   const keys = await safeList(kPlayerPrefix(sessionId), true);
@@ -488,10 +497,12 @@ function renderHost(){
 }
 
 function renderHostSetup(){
+  const total = hostState.questions.length;
   const rows = hostState.questions.map((q, i) => `
     <div class="setup-item">
-      <div class="row" style="align-items:center;margin-bottom:8px;">
-        <span class="badge-idx">${i+1}/15</span>
+      <div class="row" style="align-items:center;margin-bottom:8px;justify-content:space-between;">
+        <span class="badge-idx">${i+1}/${total}</span>
+        <button class="btn secondary" style="padding:6px 12px;font-size:14px;" data-remove="${i}" ${total<=1?'disabled':''}>🗑️ Supprimer</button>
       </div>
       <div class="row">
         <div style="flex:2;min-width:180px;">
@@ -513,11 +524,14 @@ function renderHostSetup(){
     <div class="stack">
       <div class="center stack" style="gap:2px;">
         <div class="eyebrow">Partie ${sessionId}</div>
-        <h1>🛠️ Prépare tes 15 questions</h1>
-        <p class="muted small">Renseigne l'objet et son juste prix. L'image est facultative.</p>
+        <h1>🛠️ Prépare tes questions</h1>
+        <p class="muted small">Renseigne l'objet et son juste prix. L'image est facultative. Ajoute ou supprime des questions librement (${total} pour l'instant).</p>
       </div>
       ${errorMsg ? `<div class="card" style="border-color:var(--pink);color:var(--pink);">${errorMsg}</div>` : ''}
       <div class="stack">${rows}</div>
+      <div class="footer-actions">
+        <button class="btn secondary" id="add-btn">➕ Ajouter une question</button>
+      </div>
       <div class="footer-actions">
         <button class="btn big" id="validate-btn">Enregistrer et passer au salon d'attente →</button>
       </div>
@@ -530,6 +544,10 @@ function renderHostSetup(){
       hostState.questions[i][f] = e.target.value;
     });
   });
+  app.querySelectorAll('button[data-remove]').forEach(b => {
+    b.addEventListener('click', (e) => hostRemoveQuestion(parseInt(e.target.dataset.remove)));
+  });
+  document.getElementById('add-btn').onclick = hostAddQuestion;
   document.getElementById('validate-btn').onclick = hostValidateSetup;
 }
 
@@ -544,15 +562,14 @@ function renderHostLobby(){
       <div class="code-badge">PARTIE ${sessionId}</div>
       <p class="muted small">Scanne le QR code avec ton téléphone, aucune installation nécessaire.</p>
       <div class="card" style="width:100%;max-width:640px;">
-        <h3 style="margin-bottom:10px;">👥 Joueurs connectés (<span class="num">${(hostState.roster||[]).length}</span>/15)</h3>
+        <h3 style="margin-bottom:10px;">👥 Joueurs connectés (<span class="num">${(hostState.roster||[]).length}</span>)</h3>
         <div class="row">${chips}</div>
       </div>
-      <button class="btn big" id="start-btn" ${(hostState.roster||[]).length===0 ? 'disabled':''}>🚀 Démarrer la partie</button>
+      <button class="btn big" id="start-btn">🚀 Démarrer la partie</button>
     </div>
   `;
   new QRCode(document.getElementById('qr-holder'), { text:url, width:200, height:200, colorDark:'#120B2E', colorLight:'#ffffff' });
-  const btn = document.getElementById('start-btn');
-  if(btn) btn.onclick = hostStartGame;
+  document.getElementById('start-btn').onclick = hostStartGame;
 }
 
 function renderHostQuestion(){
