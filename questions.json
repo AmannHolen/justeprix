@@ -1,15 +1,15 @@
 [
-  { "nom": "Un kilo de courgette bio", "valeur": 3.60, description: "C'est moins cher au potager", "image": "/images/courgettes.jpg" },
-  { "nom": "Une paire de chaussures de running", description: " HOKA Clifton 10", "valeur": 160, "image": "/images/hoka.webp" },
-  { "nom": "Des friandises pour Douglas", "valeur": 4.79, description: "60g de pommes séchées","image": "/images/lapin_chips_pomme.jpg" },
-  { "nom": "Une bouteille de Villageoise", "valeur": 3.80, description: "Un bon rapport qualité/cuite", "image": "/images/vilageoise.jpg" },
-  { "nom": "Un billet aller-retour Paris-Cuba", "valeur": 793, description: "1 semaine en septembre par AirFrance", "image": "/images/cuba.gif" },
-  { "nom": "Un scooter électrique", "valeur": 2490, description: "", "image": "/images/scooter.png" },
-  { "nom": "Un billig Krampouz 33cm", "valeur": 289, description: "", "image": "/images/billig.jpg" },
-  { "nom": "Le prix au kilo d'un homard bleu en criée en aout", "valeur": 39, description: "", "image": "/images/homard.jpg" },
-  { "nom": "Une poule rousse", "valeur": 15, description: "", "image": "/images/poule.jpeg" },  
-  { "nom": "Un billet concert pour Matmatah", "valeur": 36, description: "A Brest, place en fosse", "image": "/images/matmatah.jpg" },
-  { "nom": "Nombre de grains de riz dans 1 kg", "valeur": 47619, description: "", "image": "/images/riz.jpg" },  
-  { "nom": "Nombre de mètres de spaghetti dans 500 g", description: "", "valeur": 90, "image": "/images/spaghetti.jpg" },
-  { "nom": "Combien de bigoudènes faudrait-il pour faire une ronde autour d'un terrain de foot", description: "2 personnes par mètres", "valeur":  173, "image": "/images/bigoudene.JPG" }
+  { "nom": "Un kilo de courgette bio", "valeur": 3.60, "description": "C'est moins cher au potager", "image": "/images/courgettes.jpg" },
+  { "nom": "Une paire de chaussures de running", "description": " HOKA Clifton 10", "valeur": 160, "image": "/images/hoka.webp" },
+  { "nom": "Des friandises pour Douglas", "valeur": 4.79, "description": "60g de pommes séchées","image": "/images/lapin_chips_pomme.jpg" },
+  { "nom": "Une bouteille de Villageoise", "valeur": 3.80, "description": "Un bon rapport qualité/cuite", "image": "/images/vilageoise.jpg" },
+  { "nom": "Un billet aller-retour Paris-Cuba", "valeur": 793, "description": "1 semaine en septembre par AirFrance", "image": "/images/cuba.gif" },
+  { "nom": "Un scooter électrique", "valeur": 2490, "description": "", "image": "/images/scooter.png" },
+  { "nom": "Un billig Krampouz 33cm", "valeur": 289, "description": "", "image": "/images/billig.jpg" },
+  { "nom": "Le prix au kilo d'un homard bleu en criée en aout", "valeur": 39, "description": "", "image": "/images/homard.jpg" },
+  { "nom": "Une poule rousse", "valeur": 15, "description": "", "image": "/images/poule.jpeg" },  
+  { "nom": "Un billet concert pour Matmatah", "valeur": 36, "description": "A Brest, place en fosse", "image": "/images/matmatah.jpg" },
+  { "nom": "Nombre de grains de riz dans 1 kg", "valeur": 47619, "description": "", "image": "/images/riz.jpg" },  
+  { "nom": "Nombre de mètres de spaghetti dans 500 g", "description": "", "valeur": 90, "image": "/images/spaghetti.jpg" },
+  { "nom": "Combien de bigoudènes faudrait-il pour faire une ronde autour d'un terrain de foot", "description": "2 personnes par mètres", "valeur":  173, "image": "/images/bigoudene.JPG" }
 ]
