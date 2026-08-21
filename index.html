@@ -409,12 +409,34 @@ function hostRemoveQuestion(i){
   hostState.questions.splice(i, 1);
   render();
 }
+function startHostQuestionPolling(){
+  clearInterval(pollHandle);
+  pollHandle = setInterval(async () => {
+    if(!hostState || hostState.phase !== 'question'){ clearInterval(pollHandle); return; }
+    playersMap = await getPlayers(sessionId);
+    const idx = hostState.currentIndex;
+    let count = 0;
+    Object.values(playersMap).forEach(doc => {
+      const ans = doc.answers ? doc.answers[idx] : undefined;
+      if(ans !== undefined && ans !== null && ans !== '') count++;
+    });
+    answeredCount = count;
+    const total = Object.keys(playersMap).length;
+    if(total > 0 && count >= total){
+      clearInterval(pollHandle);
+      await hostReveal();
+    } else {
+      render();
+    }
+  }, 2000);
+}
 async function hostStartGame(){
   clearInterval(pollHandle);
   hostState.currentIndex = 0;
   hostState.phase = 'question';
   answeredCount = null;
   await saveHostState();
+  startHostQuestionPolling();
 }
 async function hostCheckAnswers(){
   playersMap = await getPlayers(sessionId);
@@ -427,17 +449,20 @@ async function hostCheckAnswers(){
   answeredCount = count;
   render();
 }
-async function hostReveal(){ await computeAndReveal(); }
+async function hostReveal(){ clearInterval(pollHandle); await computeAndReveal(); }
 async function hostGoLeaderboard(){ hostState.phase='leaderboard'; await saveHostState(); }
 async function hostNextOrPodium(){
+  clearInterval(pollHandle);
   if(hostState.currentIndex < hostState.questions.length - 1){
     hostState.currentIndex += 1;
     hostState.phase = 'question';
     answeredCount = null;
+    await saveHostState();
+    startHostQuestionPolling();
   } else {
     hostState.phase = 'podium';
+    await saveHostState();
   }
-  await saveHostState();
 }
 async function hostRestart(){
   clearInterval(pollHandle);
@@ -615,8 +640,8 @@ function renderHostQuestion(){
       <div class="row" style="justify-content:center;">
         <button class="btn secondary" id="check-btn">🔄 Combien ont répondu ?</button>
       </div>
-      ${answeredCount !== null ? `<p class="muted">Réponses reçues : <span class="num" style="color:var(--gold);font-weight:700;">${answeredCount}</span> / ${Object.keys(playersMap).length}</p>` : ''}
-      <button class="btn pink big" id="reveal-btn">🎉 Révéler les résultats</button>
+      ${answeredCount !== null ? `<p class="muted">Réponses reçues : <span class="num" style="color:var(--gold);font-weight:700;">${answeredCount}</span> / ${Object.keys(playersMap).length} <br><span class="small">La révélation se lance automatiquement dès que tout le monde a répondu.</span></p>` : ''}
+      <button class="btn pink big" id="reveal-btn">🎉 Révéler maintenant</button>
     </div>
   `;
   document.getElementById('check-btn').onclick = hostCheckAnswers;
