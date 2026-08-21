@@ -289,14 +289,16 @@ async function refreshRosterOnce(){
 }
 function startHostLobbyPolling(){
   clearInterval(pollHandle);
-  pollHandle = setInterval(() => {
+  const tick = () => {
     if(hostState && hostState.phase === 'lobby') refreshRosterOnce();
     else clearInterval(pollHandle);
-  }, 2200);
+  };
+  tick();
+  pollHandle = setInterval(tick, 1500);
 }
 function playerPollLoop(){
   clearInterval(pollHandle);
-  pollHandle = setInterval(async () => {
+  const tick = async () => {
     if(!sessionId) return;
     const hs = await safeGet(kHost(sessionId));
     if(!hs) return;
@@ -307,11 +309,13 @@ function playerPollLoop(){
       playersMap = await getPlayers(sessionId);
       render();
     }
-  }, 2000);
+  };
+  tick();
+  pollHandle = setInterval(tick, 1200);
 }
 function playerWaitForSession(){
   clearInterval(pollHandle);
-  pollHandle = setInterval(async () => {
+  const tick = async () => {
     const sid = await safeGet(kCurrentSession);
     if(sid){
       sessionId = sid;
@@ -324,7 +328,9 @@ function playerWaitForSession(){
         playerPollLoop();
       }
     }
-  }, 1800);
+  };
+  tick();
+  pollHandle = setInterval(tick, 1000);
 }
 
 /* ---------------- Ranking ---------------- */
@@ -411,7 +417,7 @@ function hostRemoveQuestion(i){
 }
 function startHostQuestionPolling(){
   clearInterval(pollHandle);
-  pollHandle = setInterval(async () => {
+  const tick = async () => {
     if(!hostState || hostState.phase !== 'question'){ clearInterval(pollHandle); return; }
     playersMap = await getPlayers(sessionId);
     const idx = hostState.currentIndex;
@@ -428,7 +434,9 @@ function startHostQuestionPolling(){
     } else {
       render();
     }
-  }, 2000);
+  };
+  tick();
+  pollHandle = setInterval(tick, 1200);
 }
 async function hostStartGame(){
   clearInterval(pollHandle);
