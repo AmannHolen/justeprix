@@ -9,24 +9,33 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   :root{
-    --ink:#120B2E;
-    --stage:#1A1140;
-    --panel:#241748;
-    --panel-light:#2E1E5C;
-    --gold:#F4C430;
-    --gold-deep:#D9A400;
-    --pink:#FF3D7F;
-    --mint:#2FE6A0;
-    --text:#F4F1FF;
-    --muted:#B7ACDD;
+    --ink:#150A30;
+    --panel:rgba(255,255,255,.055);
+    --panel-light:rgba(255,255,255,.10);
+    --panel-border:rgba(255,255,255,.14);
+    --gold:#FFC93C;
+    --gold-deep:#E09A00;
+    --pink:#FF2E92;
+    --pink-deep:#C21470;
+    --blue:#26D1FF;
+    --blue-deep:#0B9BC9;
+    --lime:#8CFF6B;
+    --lime-deep:#4FCB2E;
+    --violet:#B15CFF;
+    --text:#FBF8FF;
+    --muted:#C9BEEA;
     --radius:20px;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
     background:
-      radial-gradient(circle at 50% -10%, #3B2478 0%, var(--ink) 55%),
-      var(--ink);
+      radial-gradient(circle at 8% 10%, rgba(255,46,146,.38), transparent 42%),
+      radial-gradient(circle at 92% 8%, rgba(38,209,255,.32), transparent 46%),
+      radial-gradient(circle at 50% 100%, rgba(255,201,60,.24), transparent 55%),
+      radial-gradient(circle at 100% 60%, rgba(177,92,255,.28), transparent 50%),
+      linear-gradient(160deg, #1B0B3B 0%, #2C0F52 45%, #170B33 100%);
+    background-attachment:fixed;
     color:var(--text);
     font-family:'Inter',sans-serif;
     min-height:100vh;
@@ -40,8 +49,11 @@
     letter-spacing:.14em;
     text-transform:uppercase;
     font-size:12px;
-    color:var(--gold);
-    font-weight:600;
+    background:linear-gradient(90deg, var(--gold), var(--pink));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    font-weight:700;
   }
   .num{font-family:'Space Grotesk',monospace;font-variant-numeric:tabular-nums;}
   .center{text-align:center;}
@@ -49,16 +61,19 @@
   .row{display:flex;gap:12px;flex-wrap:wrap;}
   .card{
     background:var(--panel);
-    border:1px solid rgba(255,255,255,.06);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border:1px solid var(--panel-border);
     border-radius:var(--radius);
     padding:22px;
+    box-shadow:0 10px 34px rgba(0,0,0,.28);
   }
   .btn{
     font-family:'Baloo 2',sans-serif;
     font-weight:700;
     font-size:17px;
     color:var(--ink);
-    background:var(--gold);
+    background:linear-gradient(135deg, var(--gold), #FF9F3C);
     border:none;
     border-radius:14px;
     padding:14px 22px;
@@ -69,18 +84,19 @@
   .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--gold-deep);}
   .btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;}
   .btn.secondary{
-    background:transparent;
-    color:var(--text);
-    border:2px solid var(--panel-light);
+    background:rgba(38,209,255,.10);
+    color:var(--blue);
+    border:2px solid var(--blue-deep);
     box-shadow:none;
   }
-  .btn.pink{background:var(--pink);box-shadow:0 4px 0 #B3255C;color:#fff;}
+  .btn.secondary:active{transform:translateY(2px);}
+  .btn.pink{background:linear-gradient(135deg, var(--pink), var(--violet));box-shadow:0 4px 0 var(--pink-deep);color:#fff;}
   .btn.big{padding:22px 30px;font-size:22px;width:100%;}
   input[type=text], input[type=number], input[type=url]{
     font-family:'Inter',sans-serif;
     font-size:16px;
-    background:var(--ink);
-    border:2px solid var(--panel-light);
+    background:rgba(0,0,0,.25);
+    border:2px solid var(--panel-border);
     color:var(--text);
     border-radius:10px;
     padding:12px 14px;
@@ -94,15 +110,17 @@
   .role-btn{
     display:flex;align-items:center;gap:16px;
     background:var(--panel);
-    border:2px solid var(--panel-light);
+    backdrop-filter:blur(14px);
+    border:2px solid var(--panel-border);
     border-radius:var(--radius);
     padding:22px;
     cursor:pointer;
     text-align:left;
     width:100%;
     color:var(--text);
+    transition:border-color .15s ease, transform .15s ease;
   }
-  .role-btn:hover{border-color:var(--gold);}
+  .role-btn:hover{border-color:var(--gold);transform:translateY(-2px);}
   .role-btn .emoji{font-size:36px;}
   .role-btn .title{font-family:'Baloo 2';font-weight:700;font-size:20px;}
   .role-btn .desc{color:var(--muted);font-size:13px;margin-top:2px;}
@@ -110,10 +128,12 @@
   /* PRICE TAG (signature element) */
   .price-tag{
     position:relative;
-    background:linear-gradient(160deg, var(--panel-light), var(--panel));
+    background:linear-gradient(160deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+    backdrop-filter:blur(14px);
     border-radius:16px 16px 16px 60px;
     padding:26px 26px 26px 40px;
-    border:2px solid rgba(244,196,48,.35);
+    border:2px solid rgba(255,201,60,.45);
+    box-shadow:0 0 0 1px rgba(255,255,255,.04), 0 14px 40px rgba(255,46,146,.18), 0 14px 40px rgba(38,209,255,.14);
     margin:0 auto;
   }
   .price-tag::before{
@@ -126,21 +146,29 @@
     border-radius:50%;
     transform:translateY(-50%);
   }
-  .price-tag .obj-title{font-family:'Baloo 2';font-size:26px;font-weight:700;}
-  .price-tag img{max-width:100%;max-height:220px;border-radius:12px;margin:14px auto;display:block;}
+  .price-tag .obj-title{
+    font-family:'Baloo 2';font-size:26px;font-weight:700;
+    background:linear-gradient(90deg, #fff, var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .price-tag img{max-width:100%;max-height:220px;border-radius:12px;margin:14px auto;display:block;box-shadow:0 8px 24px rgba(0,0,0,.35);}
   .price-tag .price-reveal{
-    font-family:'Space Grotesk';font-weight:700;font-size:40px;color:var(--gold);
+    font-family:'Space Grotesk';font-weight:700;font-size:40px;
+    background:linear-gradient(90deg, var(--gold), var(--pink));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
   }
 
   /* LOBBY / QR */
-  .qr-wrap{background:#fff;padding:14px;border-radius:16px;display:inline-block;}
+  .qr-wrap{background:#fff;padding:14px;border-radius:16px;display:inline-block;box-shadow:0 10px 30px rgba(255,46,146,.25);}
   .code-badge{
     font-family:'Space Grotesk';font-weight:700;letter-spacing:.12em;
-    background:var(--ink);color:var(--gold);padding:8px 16px;border-radius:10px;
+    background:rgba(0,0,0,.3);color:var(--gold);padding:8px 16px;border-radius:10px;
     display:inline-block;font-size:20px;border:2px dashed var(--gold);
   }
   .roster-chip{
-    background:var(--panel-light);border-radius:20px;padding:8px 14px;
+    background:linear-gradient(135deg, rgba(38,209,255,.22), rgba(177,92,255,.22));
+    border:1px solid var(--panel-border);
+    border-radius:20px;padding:8px 14px;
     font-size:14px;display:flex;align-items:center;gap:6px;
   }
 
@@ -148,39 +176,47 @@
   .lb-row{
     display:flex;align-items:center;gap:14px;
     background:var(--panel-light);
+    border:1px solid var(--panel-border);
     border-radius:14px;padding:12px 16px;
+    border-left:4px solid var(--blue);
   }
   .lb-row .rank{font-family:'Space Grotesk';font-weight:700;font-size:18px;width:28px;color:var(--muted);}
   .lb-row .name{flex:1;font-weight:600;}
   .lb-row .score{font-family:'Space Grotesk';font-weight:700;font-size:20px;color:var(--gold);}
-  .lb-row.me{outline:2px solid var(--mint);}
-  .lb-row.top1{background:linear-gradient(90deg, rgba(244,196,48,.25), var(--panel-light));}
+  .lb-row.me{outline:2px solid var(--lime);}
+  .lb-row.top1{background:linear-gradient(90deg, rgba(255,201,60,.28), var(--panel-light));border-left-color:var(--gold);}
 
   /* PODIUM */
   .podium{display:flex;align-items:flex-end;gap:10px;justify-content:center;margin-top:30px;}
   .podium .place{
-    background:var(--panel-light);border-radius:16px 16px 0 0;
+    background:var(--panel-light);border:1px solid var(--panel-border);
+    border-radius:16px 16px 0 0;
     text-align:center;padding:14px 10px;width:110px;
   }
   .podium .place .medal{font-size:34px;}
   .podium .place .name{font-weight:700;margin:6px 0 2px;font-size:14px;}
   .podium .place .score{color:var(--gold);font-family:'Space Grotesk';font-weight:700;}
-  .podium .p1{height:180px;order:2;border-top:4px solid var(--gold);}
+  .podium .p1{height:180px;order:2;border-top:4px solid var(--gold);background:linear-gradient(180deg, rgba(255,201,60,.22), var(--panel-light));}
   .podium .p2{height:130px;order:1;border-top:4px solid #C9CBD8;}
   .podium .p3{height:100px;order:3;border-top:4px solid #C77B4A;}
 
   .answer-grid{display:flex;flex-direction:column;gap:8px;}
   .answer-row{
     display:flex;align-items:center;gap:10px;
-    background:var(--panel-light);border-radius:12px;padding:10px 14px;
+    background:var(--panel-light);border:1px solid var(--panel-border);
+    border-radius:12px;padding:10px 14px;
+    border-left:4px solid transparent;
   }
+  .answer-row.rank-0{border-left-color:var(--gold);background:linear-gradient(90deg, rgba(255,201,60,.20), var(--panel-light));}
+  .answer-row.rank-1{border-left-color:#C9CBD8;}
+  .answer-row.rank-2{border-left-color:#C77B4A;}
   .answer-row .medal{width:26px;text-align:center;}
   .answer-row .name{flex:1;font-weight:600;}
   .answer-row .val{font-family:'Space Grotesk';font-weight:600;}
   .answer-row .pts{font-family:'Space Grotesk';font-weight:700;color:var(--gold);}
-  .setup-item{border:1px solid var(--panel-light);border-radius:14px;padding:14px;}
+  .setup-item{border:1px solid var(--panel-border);background:var(--panel);border-radius:14px;padding:14px;}
   .badge-idx{
-    background:var(--gold);color:var(--ink);font-family:'Space Grotesk';font-weight:700;
+    background:linear-gradient(135deg, var(--gold), var(--pink));color:var(--ink);font-family:'Space Grotesk';font-weight:700;
     border-radius:8px;padding:2px 8px;font-size:13px;
   }
   .muted{color:var(--muted);}
@@ -668,7 +704,7 @@ function renderHostReveal(){
   const q = hostState.questions[hostState.currentIndex];
   const list = hostState.results[hostState.currentIndex] || [];
   const rowsHtml = list.map((e,i) => `
-    <div class="answer-row">
+    <div class="answer-row rank-${i}">
       <div class="medal">${i===0?'🥇':i===1?'🥈':i===2?'🥉':''}</div>
       <div class="name">${e.name}</div>
       <div class="val">${euro(e.answer)}</div>
