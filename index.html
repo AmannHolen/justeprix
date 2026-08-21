@@ -277,7 +277,15 @@ function sig(hs){
 /* ---------------- Polling ---------------- */
 async function refreshRosterOnce(){
   playersMap = await getPlayers(sessionId);
-  render();
+  const rosterList = document.getElementById('roster-list');
+  const rosterCount = document.getElementById('roster-count');
+  if(rosterList && rosterCount){
+    const roster = Object.entries(playersMap).map(([id,d]) => ({id, name:d.name}));
+    rosterCount.textContent = roster.length;
+    rosterList.innerHTML = roster.map(p => `<div class="roster-chip">🙋 ${p.name}</div>`).join('') || `<span class="muted small">En attente de joueurs…</span>`;
+  } else {
+    render();
+  }
 }
 function startHostLobbyPolling(){
   clearInterval(pollHandle);
@@ -566,8 +574,8 @@ function renderHostLobby(){
       <div class="code-badge">PARTIE ${sessionId}</div>
       <p class="muted small">Scanne le QR code avec ton téléphone, aucune installation nécessaire.</p>
       <div class="card" style="width:100%;max-width:640px;">
-        <h3 style="margin-bottom:10px;">👥 Joueurs connectés (<span class="num">${roster.length}</span>)</h3>
-        <div class="row">${chips}</div>
+        <h3 style="margin-bottom:10px;">👥 Joueurs connectés (<span class="num" id="roster-count">${roster.length}</span>)</h3>
+        <div class="row" id="roster-list">${chips}</div>
       </div>
       <button class="btn big" id="start-btn">🚀 Démarrer la partie</button>
     </div>
