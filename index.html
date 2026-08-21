@@ -369,9 +369,23 @@ async function savePlayerDoc(){
 }
 
 /* ---------------- Host actions ---------------- */
+async function loadQuestionsConfig(){
+  try{
+    const r = await fetch('/questions.json', { cache: 'no-store' });
+    if(!r.ok) return null;
+    const data = await r.json();
+    if(!Array.isArray(data) || data.length === 0) return null;
+    return data.map(q => ({
+      title: (q.nom ?? q.title ?? '').toString(),
+      price: (q.valeur ?? q.prix ?? q.price ?? '').toString(),
+      image: (q.image ?? '').toString()
+    }));
+  }catch(e){ return null; }
+}
 async function hostCreateSession(){
   sessionId = randCode();
-  hostState = defaultHostState();
+  const loaded = await loadQuestionsConfig();
+  hostState = { phase:'setup', questions: (loaded && loaded.length) ? loaded : defaultQuestions(), currentIndex:-1, results:{} };
   playersMap = {};
   await safeSet(kHost(sessionId), hostState);
   await safeSet(kCurrentSession, sessionId);
@@ -496,7 +510,11 @@ function renderHost(){
         <p class="muted">Crée une partie pour générer le QR code de connexion.</p>
         <button class="btn big" id="create-btn">Créer une nouvelle partie</button>
       </div>`;
-    document.getElementById('create-btn').onclick = hostCreateSession;
+    document.getElementById('create-btn').onclick = (e) => {
+      e.target.disabled = true;
+      e.target.textContent = 'Chargement…';
+      hostCreateSession();
+    };
     return;
   }
   if(hostState.phase === 'setup') return renderHostSetup();
