@@ -6,6 +6,7 @@
   { "nom": "Un billet aller-retour Paris-Cuba", "valeur": 793, "description": "1 semaine en septembre par AirFrance", "image": "/images/cuba.gif" },
   { "nom": "Un scooter électrique", "valeur": 2490, "description": "", "image": "/images/scooter.png" },
   { "nom": "Un billig Krampouz 33cm", "valeur": 289, "description": "", "image": "/images/billig.jpg" },
+  { "nom": "Une fanfare pour 1h pour un mariage", "valeur": 1700, "description": "", "image": "/images/fanfare.jpg" },
   { "nom": "Le prix au kilo d'un homard bleu en criée en aout", "valeur": 39, "description": "", "image": "/images/homard.jpg" },
   { "nom": "Une poule rousse", "valeur": 15, "description": "", "image": "/images/poule.jpeg" },  
   { "nom": "Un billet concert pour Matmatah", "valeur": 36, "description": "A Brest, place en fosse", "image": "/images/matmatah.jpg" },
