@@ -10,6 +10,7 @@
   { "nom": "Le prix au kilo d'un homard bleu en criée en aout", "valeur": 39, "description": "", "image": "/images/homard.jpg" },
   { "nom": "Une poule rousse", "valeur": 15, "description": "", "image": "/images/poule.jpeg" },  
   { "nom": "Un billet concert pour Matmatah", "valeur": 36, "description": "A Brest, place en fosse", "image": "/images/matmatah.jpg" },
+  { "nom": "Une nuit dans le phare de l'île Vierge", "valeur": 990, "description": "Un samedi en été", "image": "/images/ile-vierge.jpg" },  
   { "nom": "Nombre de grains de riz dans 1 kg", "valeur": 47619, "description": "", "image": "/images/riz.jpg" },  
   { "nom": "Nombre de mètres de spaghetti dans 500 g", "description": "", "valeur": 90, "image": "/images/spaghetti.jpg" },
   { "nom": "Combien de bigoudènes faudrait-il pour faire une ronde autour d'un terrain de foot", "description": "2 personnes par mètres", "valeur":  173, "image": "/images/bigoudene.JPG" }
